@@ -39,6 +39,18 @@ export const collection = (name: string): Collection => {
   return client.collection(name);
 };
 
+export const insert = <T>(name: string, item: T): T => {
+  const _collection = collection(name);
+  _collection.insertOne(item);
+  return item;
+};
+
+export const find = async <T>(name: string): Promise<[T]> => {
+  const _collection = collection(name);
+  const items = _collection.find({}).toArray() as Promise<[T]>;
+  return items;
+};
+
 export const getClient = (): Db => {
   return client;
 };

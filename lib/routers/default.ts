@@ -1,6 +1,5 @@
 import { Router, urlencoded, json, static as statik } from 'express';
 import CORS from 'cors';
-import { Logger } from '../utils/logger';
 
 /**
  *
