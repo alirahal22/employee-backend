@@ -1,5 +1,5 @@
 export interface Error {
-  status: number;
+  statusCode: number;
   message: string;
   description?: string;
 }
@@ -9,9 +9,9 @@ export interface Error {
  * @param message The error message
  * @param status The error status Code
  */
-export const makeError = (message: string, status: number): Error => {
-  const error: Error = { status: 500, message: 'Internal server error' };
-  error.status = status;
+export const makeError = (message: string, statusCode: number): Error => {
+  const error: Error = { statusCode: 500, message: 'Internal server error' };
+  error.statusCode = statusCode;
   error.message = message;
   return error;
 };
