@@ -24,10 +24,11 @@ export const connect = async (): Promise<Db> => {
   if (!isEmpty(client)) return;
   try {
     const mongoUrl = getMongoUrl();
-    const db = await MongoClient.connect(mongoUrl);
-    return db.db(MONGODB_DATABASE);
+    const mongoClient = await MongoClient.connect(mongoUrl);
+    return mongoClient.db(MONGODB_DATABASE);
   } catch (err) {
-    Logger.info(err.message);
+    Logger.error(err.message);
+    throw new Error('Could not connect to MongoDB');
   }
 };
 
