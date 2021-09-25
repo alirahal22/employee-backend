@@ -1,8 +1,7 @@
-import { Db, MongoClient, MongoClientOptions } from 'mongodb';
+import { Collection, Db, MongoClient } from 'mongodb';
 import { config } from 'dotenv';
 import isEmpty from 'lodash/isEmpty';
-
-import { logger } from '&utils/logger';
+import { Logger } from '../utils/logger';
 
 config();
 
@@ -16,39 +15,34 @@ const {
 
 let client: Db;
 
-export const getMongoUrl = () => {
+export const getMongoUrl = (): string => {
   const url = `mongodb://${MONGODB_USER}:${MONGODB_PWD}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_DATABASE}`;
   return url;
 };
 
-export const connect = async () => {
+export const connect = async (): Promise<Db> => {
   if (!isEmpty(client)) return;
   try {
     const mongoUrl = getMongoUrl();
     const db = await MongoClient.connect(mongoUrl);
-    client = db.db(MONGODB_DATABASE);
+    return db.db(MONGODB_DATABASE);
   } catch (err) {
-    logger.info(err.message);
+    Logger.info(err.message);
   }
 };
 
-export const collection = (name: string) => {
+export const collection = (name: string): Collection => {
   if (isEmpty(client)) {
     throw new Error('Could not connect to MongoDB');
-  } else if (
-    !isEmpty(client) &&
-    !(client.serverConfig.connections().length <= 0)
-  ) {
-    logger.error('MongoDB connection interrupted');
-    throw new Error('MongoDB connection interrupted');
   }
   return client.collection(name);
 };
 
-export const getClient = () => {
+export const getClient = (): Db => {
   return client;
 };
 
 (async () => {
-  await connect();
+  Logger.info('Connecting to the database');
+  client = await connect();
 })();
