@@ -1,11 +1,14 @@
-import express from 'express';
+import Express from 'express';
+import { Logger } from './lib/utils/logger';
 
-const app = express();
+import './lib/config/db';
+
+const app = Express();
 const port = 3000;
 app.get('/', (req, res) => {
   res.send({ status: 'running' });
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  Logger.info(`Server is running on port ${port}`);
 });
