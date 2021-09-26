@@ -1,13 +1,16 @@
 import { isEmpty } from 'lodash';
 
-import { find, findById } from '&config/db';
+import { find, findById, PaginationAndSortingQueryParams } from '&config/db';
 import { Logger } from '&utils/logger';
 import { notFoundError } from '&utils/makeError';
 import { DEPARTMENT_COLLECTION } from '&config/collections';
 import Department from '../Department';
 
-export const getAll = async () => {
-  const departments: [Department] = await find(DEPARTMENT_COLLECTION);
+export const getAll = async (queryParams) => {
+  const departments: [Department] = await find(
+    DEPARTMENT_COLLECTION,
+    queryParams,
+  );
   return departments;
 };
 

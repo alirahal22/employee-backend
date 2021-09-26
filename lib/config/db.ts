@@ -61,10 +61,27 @@ export const update = <T extends BaseEntity>(
   _collection.updateOne({ _id: new ObjectId(id) }, { $set: item });
   return item;
 };
+interface PaginationAndSortingQueryParams {
+  page: number;
+  pageSize: string;
+  sortBy: [];
+}
 
-export const find = async <T>(name: string): Promise<[T]> => {
+export const find = async <T>(
+  name: string,
+  query: PaginationAndSortingQueryParams,
+): Promise<[T]> => {
   const _collection = collection(name);
-  const items = _collection.find({}).toArray() as Promise<[T]>;
+  let f = _collection.find({});
+
+  if (!isEmpty(query) && !isEmpty(query.page)) {
+    const size: number = parseInt(query.pageSize ?? '10');
+    Logger.info(`Skipping ${(query.page - 1) * size}`);
+    Logger.info(`Size ${size}`);
+    f = f.skip((query.page - 1) * size).limit(size as number);
+  }
+
+  const items = f.toArray() as Promise<[T]>;
   return items;
 };
 
