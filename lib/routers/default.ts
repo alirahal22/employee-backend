@@ -15,7 +15,7 @@ export const defaultRouter = (): Router => {
   router.use(statik('public'));
 
   router.all('/*', (_req, res, next) => {
-    res.statusCode = 200;
+    res.status(200);
     next();
   });
 

@@ -11,7 +11,7 @@ const add = async (req: Request, res: Response) => {
     res.status(201);
     res.send(department);
   } catch (error) {
-    res.status(error.statusCode);
+    res.status(error.status);
     res.send(error);
   }
 };

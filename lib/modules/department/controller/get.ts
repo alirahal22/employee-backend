@@ -17,9 +17,9 @@ const get = async (req: Request, res: Response) => {
     res.status(200);
     res.send(department);
   } catch (error) {
-    error.statusCode = error.statusCode || 500;
+    error.status = error.status || 500;
 
-    res.status(error.statusCode);
+    res.status(error.status);
     res.send(error);
   }
 };
