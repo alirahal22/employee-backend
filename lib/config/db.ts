@@ -2,6 +2,7 @@ import { Collection, Db, MongoClient, ObjectId } from 'mongodb';
 import { config } from 'dotenv';
 import isEmpty from 'lodash/isEmpty';
 import { Logger } from '../utils/logger';
+import BaseEntity from '../utils/BaseEntity';
 
 config();
 
@@ -39,9 +40,24 @@ export const collection = (name: string): Collection => {
   return client.collection(name);
 };
 
-export const insert = <T>(name: string, item: T): T => {
+export const insert = <T extends BaseEntity>(name: string, item: T): T => {
+  item.created_on = new Date();
+  item.updated_on = new Date();
+
   const _collection = collection(name);
   _collection.insertOne(item);
+  return item;
+};
+
+export const update = <T extends BaseEntity>(
+  name: string,
+  id: string,
+  item: T,
+): T => {
+  item.updated_on = new Date();
+
+  const _collection = collection(name);
+  _collection.updateOne({ _id: new ObjectId(id) }, { $set: item });
   return item;
 };
 

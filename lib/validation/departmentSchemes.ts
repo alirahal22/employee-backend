@@ -8,3 +8,13 @@ export const departmentCreationScheme = {
     })
     .unknown(false),
 };
+
+export const departmentPatchScheme = {
+  body: Joi.object()
+    .keys({
+      name: Joi.string().optional(),
+      description: Joi.string().optional(),
+    })
+    .min(1)
+    .unknown(false),
+};
