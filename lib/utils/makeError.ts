@@ -15,3 +15,7 @@ export const makeError = (message: string, statusCode: number): Error => {
   error.message = message;
   return error;
 };
+
+export const notFoundError = (): Error => {
+  return makeError('Resource not found', 404);
+};

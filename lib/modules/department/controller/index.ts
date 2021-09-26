@@ -1,4 +1,4 @@
-import { getAll } from './get';
+import { getAll, get } from './get';
 import { add } from './add';
 
-export { getAll, add };
+export { getAll, get, add };

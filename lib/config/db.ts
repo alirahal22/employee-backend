@@ -1,4 +1,4 @@
-import { Collection, Db, MongoClient } from 'mongodb';
+import { Collection, Db, MongoClient, ObjectId } from 'mongodb';
 import { config } from 'dotenv';
 import isEmpty from 'lodash/isEmpty';
 import { Logger } from '../utils/logger';
@@ -49,6 +49,14 @@ export const find = async <T>(name: string): Promise<[T]> => {
   const _collection = collection(name);
   const items = _collection.find({}).toArray() as Promise<[T]>;
   return items;
+};
+
+export const findById = async <T>(name: string, id: string): Promise<T> => {
+  const _collection = collection(name);
+  const item = _collection.findOne({
+    _id: new ObjectId(id),
+  }) as Promise<T>;
+  return item;
 };
 
 export const getClient = (): Db => {

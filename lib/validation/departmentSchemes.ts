@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-export const departmentScheme = {
+export const departmentCreationScheme = {
   body: Joi.object()
     .keys({
       name: Joi.string().required(),

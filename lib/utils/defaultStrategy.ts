@@ -17,10 +17,10 @@ export const defaultStrategy = (
     next(err);
   }
 
-  Logger.info(JSON.stringify(err));
+  Logger.error(JSON.stringify(err));
 
   res.status(err.statusCode ?? 500);
   res.set('Content-Type', 'application/json');
-  res.send({ status: err.statusCode ?? 500, message: err.message });
+  res.send({ statusCode: err.statusCode ?? 500, message: err.message });
   next(err);
 };
