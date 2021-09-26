@@ -8,4 +8,7 @@ export default interface Employee extends BaseEntity {
   phone: string;
   salary: number;
   annualLeaves: number;
+
+  branchId: string;
+  departmentId: string;
 }
