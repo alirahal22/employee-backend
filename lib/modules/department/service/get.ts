@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash';
 
-import { find, findById, PaginationAndSortingQueryParams } from '&config/db';
+import { find, findById } from '&config/db';
 import { Logger } from '&utils/logger';
 import { notFoundError } from '&utils/makeError';
 import { DEPARTMENT_COLLECTION } from '&config/collections';
