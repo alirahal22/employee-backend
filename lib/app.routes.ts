@@ -3,6 +3,7 @@ import { Express } from 'express';
 import { defaultRouter } from '&routers/default';
 import { healthRouter } from '&modules/health/health.route';
 import { departmentRouter } from '&modules/department/department.route';
+import { branchRouter } from '&modules/branch/branch.route';
 
 /**
  * All routes should be defined here and a specific router is assigned for
@@ -13,4 +14,5 @@ import { departmentRouter } from '&modules/department/department.route';
 export const appRoutes = (app: Express) => {
   app.use('/health', healthRouter(defaultRouter()));
   app.use('/department', departmentRouter(defaultRouter()));
+  app.use('/branch', branchRouter(defaultRouter()));
 };

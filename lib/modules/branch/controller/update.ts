@@ -1,17 +1,17 @@
 import { Request, Response } from 'express';
 
-import Department from '../Department';
-import { update as updateDepartment } from '../service/update';
+import Branch from '../Branch';
+import { update as updateBranch } from '../service/update';
 import { get } from '../service/get';
 
 const update = async (req: Request, res: Response) => {
   try {
-    let department = req.body as Department;
-    department = await updateDepartment(req.params.id, department);
-    department = await get(req.params.id);
+    let branch = req.body as Branch;
+    branch = await updateBranch(req.params.id, branch);
+    branch = await get(req.params.id);
 
     res.status(200);
-    res.send(department);
+    res.send(branch);
   } catch (error) {
     error.status = error.status || 500;
 
