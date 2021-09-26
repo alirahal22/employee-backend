@@ -61,10 +61,42 @@ export const update = <T extends BaseEntity>(
   _collection.updateOne({ _id: new ObjectId(id) }, { $set: item });
   return item;
 };
+interface PaginationAndSortingQueryParams {
+  page: number;
+  pageSize: string;
+  sortBy: [string];
+}
 
-export const find = async <T>(name: string): Promise<[T]> => {
+export const find = async <T>(
+  name: string,
+  query: PaginationAndSortingQueryParams,
+): Promise<[T]> => {
   const _collection = collection(name);
-  const items = _collection.find({}).toArray() as Promise<[T]>;
+  let cursor = _collection.find({});
+  if (!isEmpty(query)) {
+    if (!isEmpty(query.sortBy)) {
+      const sortOptions = {};
+      // if only one sorting field is set, convert from string to array
+      if (typeof query.sortBy === 'string') {
+        query.sortBy = [query.sortBy];
+      }
+      // map each entry in the array to mongo filters syntax
+      query.sortBy.forEach((element) => {
+        sortOptions[element.split('.')[0]] = element.split('.')[1];
+      });
+
+      Logger.info(JSON.stringify(sortOptions));
+      cursor = cursor.sort(sortOptions);
+    }
+    if (!isEmpty(query.page)) {
+      const size: number = parseInt(query.pageSize ?? '10');
+      Logger.info(`Skipping ${(query.page - 1) * size}`);
+      Logger.info(`Size ${size}`);
+      cursor = cursor.skip((query.page - 1) * size).limit(size as number);
+    }
+  }
+
+  const items = cursor.toArray() as Promise<[T]>;
   return items;
 };
 

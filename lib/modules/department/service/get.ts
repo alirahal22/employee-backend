@@ -6,8 +6,11 @@ import { notFoundError } from '&utils/makeError';
 import { DEPARTMENT_COLLECTION } from '&config/collections';
 import Department from '../Department';
 
-export const getAll = async () => {
-  const departments: [Department] = await find(DEPARTMENT_COLLECTION);
+export const getAll = async (queryParams) => {
+  const departments: [Department] = await find(
+    DEPARTMENT_COLLECTION,
+    queryParams,
+  );
   return departments;
 };
 

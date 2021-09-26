@@ -1,5 +1,6 @@
 import { Express } from 'express';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const errorHandler = (errorList: any) => {
   const ErrorHandler = (app: Express) => {
     Object.keys(errorList).forEach((key) => {
