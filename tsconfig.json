@@ -20,6 +20,7 @@
       "&/*": ["./*"],
       "&lib/*": ["./lib/*"],
       "&config/*": ["./lib/config/*"],
+      "&validation/*": ["./lib/validation/*"],
       "&middlewares/*": ["./lib/middlewares/*"],
       "&modules/*": ["./lib/modules/*"],
       "&routers/*": ["./lib/routers/*"],

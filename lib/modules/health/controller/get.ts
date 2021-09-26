@@ -10,13 +10,13 @@ export const getHealth = async (_req: Request, res: Response) => {
     const result = getHealthService();
     Logger.info(`The ms health is ${result.status}`);
 
-    res.statusCode = 200;
+    res.status(200);
     res.send(result);
   } catch (error) {
     Logger.error(error);
     const errorStatus = error.status || 500;
 
-    res.statusCode = errorStatus;
+    res.status(errorStatus);
     res.send(makeError(error.message, errorStatus));
   }
 };

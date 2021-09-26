@@ -1,6 +1,5 @@
 import { Router, urlencoded, json, static as statik } from 'express';
 import CORS from 'cors';
-import { Logger } from '../utils/logger';
 
 /**
  *
@@ -16,7 +15,7 @@ export const defaultRouter = (): Router => {
   router.use(statik('public'));
 
   router.all('/*', (_req, res, next) => {
-    res.statusCode = 200;
+    res.status(200);
     next();
   });
 
