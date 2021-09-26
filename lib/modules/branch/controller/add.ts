@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
 
-import { add as addDepartment } from '../service/add';
-import Department from '../Department';
+import { add as addBranch } from '../service/add';
+import Branch from '../Branch';
 
 const add = async (req: Request, res: Response) => {
   try {
-    let department = req.body as Department;
-    department = await addDepartment(department);
+    let branch = req.body as Branch;
+    branch = await addBranch(branch);
 
     res.status(201);
-    res.send(department);
+    res.send(branch);
   } catch (error) {
     res.status(error.status);
     res.send(error);
