@@ -1,4 +1,4 @@
-import BaseEntity from '&/lib/utils/BaseEntity';
+import BaseEntity from '&utils/BaseEntity';
 
 export default interface Employee extends BaseEntity {
   firstName: string;
