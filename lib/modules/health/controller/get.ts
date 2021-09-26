@@ -14,9 +14,9 @@ export const getHealth = async (_req: Request, res: Response) => {
     res.send(result);
   } catch (error) {
     Logger.error(error);
-    const errorStatus = error.status || 500;
+    const errorStatus = error.statusCode || 500;
 
-    res.statusCode = errorStatus;
+    res.status(errorStatus);
     res.send(makeError(error.message, errorStatus));
   }
 };

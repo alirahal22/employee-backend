@@ -1,8 +1,9 @@
 import { Collection, Db, MongoClient, ObjectId } from 'mongodb';
 import { config } from 'dotenv';
 import isEmpty from 'lodash/isEmpty';
-import { Logger } from '../utils/logger';
-import BaseEntity from '../utils/BaseEntity';
+
+import { Logger } from '&utils/logger';
+import BaseEntity from '&utils/BaseEntity';
 
 config();
 

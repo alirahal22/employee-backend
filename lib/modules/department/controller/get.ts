@@ -1,8 +1,5 @@
 import { Request, Response } from 'express';
-import { isEmpty } from 'lodash';
-import { notFoundError } from '&/lib/utils/makeError';
-import { Logger } from '&utils/logger';
-import { Error } from '../../../utils/makeError';
+
 import {
   getAll as getAllDepartments,
   get as getDepartment,
@@ -20,6 +17,8 @@ const get = async (req: Request, res: Response) => {
     res.status(200);
     res.send(department);
   } catch (error) {
+    error.statusCode = error.statusCode || 500;
+
     res.status(error.statusCode);
     res.send(error);
   }

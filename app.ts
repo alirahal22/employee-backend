@@ -1,10 +1,14 @@
 import Express from 'express';
-import { Logger } from './lib/utils/logger';
 
-import '&config/db';
+import { Logger } from './lib/utils/logger';
 import { appRoutes } from './lib/app.routes';
-import { errorHandler } from './lib/utils/errorHandler';
-import { defaultStrategy } from './lib/utils/defaultStrategy';
+import { errorHandler } from '&utils/errorHandler';
+import { defaultStrategy } from '&utils/defaultStrategy';
+
+/**
+ * Connect to the mongo database before launching the app server.
+ */
+import '&config/db';
 
 const app = Express();
 const appErrorHandler = errorHandler([defaultStrategy]);

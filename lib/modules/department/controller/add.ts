@@ -1,6 +1,7 @@
+import { Request, Response } from 'express';
+
 import { add as addDepartment } from '../service/add';
 import Deparment from '../Department';
-import { Request, Response } from 'express';
 
 const add = async (req: Request, res: Response) => {
   try {
