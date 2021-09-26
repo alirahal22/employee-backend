@@ -1,4 +1,4 @@
-import { Collection, Db, MongoClient, ObjectId, SortDirection } from 'mongodb';
+import { Collection, Db, MongoClient, ObjectId } from 'mongodb';
 import { config } from 'dotenv';
 import isEmpty from 'lodash/isEmpty';
 
