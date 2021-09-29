@@ -1,5 +1,9 @@
 import Joi from 'joi';
 
+/**
+ * Require all information related to employees.
+ * Reject any unknown fields.
+ */
 export const employeeCreationScheme = {
   body: Joi.object()
     .keys({
@@ -17,14 +21,20 @@ export const employeeCreationScheme = {
     .unknown(false),
 };
 
+/**
+ * Require at least one of the fields of the employee in the request body.
+ * Reject the request if an attempt to change the _id.
+ * Reject any unknown fields.
+ */
 export const employeePatchScheme = {
   params: Joi.object()
     .keys({
-      id: Joi.string().alphanum().hex().length(24).optional(),
+      id: Joi.string().alphanum().hex().length(24).required(),
     })
     .unknown(false),
   body: Joi.object()
     .keys({
+      _id: Joi.forbidden(),
       firstName: Joi.string().optional(),
       lastName: Joi.string().optional(),
       dateOfBirth: Joi.date().optional(),
