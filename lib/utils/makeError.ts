@@ -19,3 +19,7 @@ export const makeError = (message: string, status: number): Error => {
 export const notFoundError = (): Error => {
   return makeError('Resource not found', 404);
 };
+
+export const internalServerError = (): Error => {
+  return makeError('Internal Server Error', 500);
+};

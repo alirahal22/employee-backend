@@ -1,13 +1,20 @@
 import Joi from 'joi';
 
+/**
+ * The base scheme used for all GET requests by id.
+ */
 export const defaultGetScheme = {
   params: Joi.object()
     .keys({
-      id: Joi.string().length(24).required(),
+      id: Joi.string().alphanum().hex().length(24).required(),
     })
     .unknown(false),
 };
 
+/**
+ * The base scheme for all GET requests that retrieve all data of a resource.
+ * Pagination, sorting and filtering are taken into consideration.
+ */
 export const defaultGetAllScheme = {
   query: Joi.object()
     .keys({
@@ -20,12 +27,23 @@ export const defaultGetAllScheme = {
       }),
       sortBy: [
         Joi.array()
-
-          .items(Joi.string().regex(/^[^.]+\.(asc|desc)$/i)) //Format needs to be property_name.asc or property_name.desc, anything else is invalid.
+          //Format needs to be <property_name>.(asc|desc), anything else is invalid.
+          .items(Joi.string().regex(/^[^.]+\.(asc|desc)$/i))
           .optional(),
         // in case only one sorting param sent.
         Joi.string().regex(/^[^.]+\.(asc|desc)$/i),
       ],
+    })
+    .unknown(false),
+};
+
+/**
+ * The base scheme used for all DELETE requests by id.
+ */
+export const defaultDeleteScheme = {
+  params: Joi.object()
+    .keys({
+      id: Joi.string().alphanum().hex().length(24).required(),
     })
     .unknown(false),
 };
