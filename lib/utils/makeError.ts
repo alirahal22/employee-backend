@@ -20,6 +20,10 @@ export const notFoundError = (): Error => {
   return makeError('Resource not found', 404);
 };
 
+export const conflict = (): Error => {
+  return makeError('Conflict', 409);
+};
+
 export const internalServerError = (): Error => {
   return makeError('Internal Server Error', 500);
 };
