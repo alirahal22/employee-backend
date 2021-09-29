@@ -21,6 +21,7 @@ export const getMongoUrl = (): string => {
   const url = `mongodb://${MONGODB_USER}:${MONGODB_PWD}@${MONGODB_HOST}/${MONGODB_DATABASE}${
     MONGODB_CONFIG ?? ''
   }`;
+  Logger.info(url);
   return url;
 };
 
