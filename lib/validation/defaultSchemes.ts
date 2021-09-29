@@ -3,7 +3,7 @@ import Joi from 'joi';
 export const defaultGetScheme = {
   params: Joi.object()
     .keys({
-      id: Joi.string().alphanum().length(24).optional(),
+      id: Joi.string().alphanum().hex().length(24).optional(),
     })
     .unknown(false),
 };
@@ -20,12 +20,19 @@ export const defaultGetAllScheme = {
       }),
       sortBy: [
         Joi.array()
-
-          .items(Joi.string().regex(/^[^.]+\.(asc|desc)$/i)) //Format needs to be property_name.asc or property_name.desc, anything else is invalid.
+          .items(Joi.string().regex(/^[^.]+\.(asc|desc)$/i)) //Format needs to be <property_name>.(asc|desc), anything else is invalid.
           .optional(),
         // in case only one sorting param sent.
         Joi.string().regex(/^[^.]+\.(asc|desc)$/i),
       ],
+    })
+    .unknown(false),
+};
+
+export const defaultDeleteScheme = {
+  params: Joi.object()
+    .keys({
+      id: Joi.string().alphanum().hex().length(24).optional(),
     })
     .unknown(false),
 };

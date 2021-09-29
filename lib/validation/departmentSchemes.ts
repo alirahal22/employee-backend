@@ -10,6 +10,11 @@ export const departmentCreationScheme = {
 };
 
 export const departmentPatchScheme = {
+  params: Joi.object()
+    .keys({
+      id: Joi.string().alphanum().hex().length(24).optional(),
+    })
+    .unknown(false),
   body: Joi.object()
     .keys({
       name: Joi.string().optional(),

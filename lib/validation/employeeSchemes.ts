@@ -18,6 +18,11 @@ export const employeeCreationScheme = {
 };
 
 export const employeePatchScheme = {
+  params: Joi.object()
+    .keys({
+      id: Joi.string().alphanum().hex().length(24).optional(),
+    })
+    .unknown(false),
   body: Joi.object()
     .keys({
       firstName: Joi.string().optional(),

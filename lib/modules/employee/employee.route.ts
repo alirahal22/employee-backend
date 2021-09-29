@@ -5,8 +5,15 @@ import { validate } from 'express-validation';
 import {
   defaultGetAllScheme,
   defaultGetScheme,
+  defaultDeleteScheme,
 } from '&validation/defaultSchemes';
-import { getAll, get, add, update } from '&modules/employee/controller';
+import {
+  getAll,
+  get,
+  add,
+  update,
+  _delete,
+} from '&modules/employee/controller';
 import {
   employeeCreationScheme,
   employeePatchScheme,
@@ -18,5 +25,6 @@ export const employeeRouter = (router: Router) => {
 
   router.post('/', validate(employeeCreationScheme), partial(add));
   router.patch('/:id', validate(employeePatchScheme), partial(update));
+  router.delete('/:id', validate(defaultDeleteScheme), partial(_delete));
   return router;
 };

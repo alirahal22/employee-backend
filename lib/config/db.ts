@@ -50,6 +50,11 @@ export const insert = <T extends BaseEntity>(name: string, item: T): T => {
   return item;
 };
 
+export const remove = <T extends BaseEntity>(name: string, id: string): any => {
+  const _collection = collection(name);
+  return _collection.deleteOne({ _id: new ObjectId(id) });
+};
+
 export const update = <T extends BaseEntity>(
   name: string,
   id: string,
