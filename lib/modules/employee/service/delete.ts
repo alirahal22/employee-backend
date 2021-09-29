@@ -8,7 +8,6 @@ import { get } from '&modules/employee/service/get';
 export const _delete = async (id: string) => {
   const employee = await get(id);
   if (!isEmpty(employee)) {
-    const test = await remove(EMPLOYEE_COLLECTION, id);
-    Logger.info(test);
+    await remove(EMPLOYEE_COLLECTION, id);
   }
 };
