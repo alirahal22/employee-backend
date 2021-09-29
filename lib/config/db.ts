@@ -9,7 +9,7 @@ config();
 
 const {
   MONGODB_HOST,
-  MONGODB_PORT,
+  MONGODB_CONFIG,
   MONGODB_DATABASE,
   MONGODB_USER,
   MONGODB_PWD,
@@ -18,10 +18,17 @@ const {
 let client: Db;
 
 export const getMongoUrl = (): string => {
-  const url = `mongodb://${MONGODB_USER}:${MONGODB_PWD}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_DATABASE}`;
+  const url = `mongodb://${MONGODB_USER}:${MONGODB_PWD}@${MONGODB_HOST}/${MONGODB_DATABASE}${
+    MONGODB_CONFIG ?? ''
+  }`;
+  Logger.info(url);
   return url;
 };
 
+/**
+ * Used to connect to MongoDB.
+ * @returns a promise with the created database connection.
+ */
 export const connect = async (): Promise<Db> => {
   if (!isEmpty(client)) return;
   try {
@@ -34,6 +41,11 @@ export const connect = async (): Promise<Db> => {
   }
 };
 
+/**
+ * Get a MongoDB collection from the database.
+ * @param name the collection name.
+ * @returns a MongoDB collection.
+ */
 export const collection = (name: string): Collection => {
   if (isEmpty(client)) {
     throw new Error('Could not connect to MongoDB');
@@ -41,6 +53,12 @@ export const collection = (name: string): Collection => {
   return client.collection(name);
 };
 
+/**
+ * Add a new element to a specific collection.
+ * @param name collection name
+ * @param item item to be added
+ * @returns
+ */
 export const insert = <T extends BaseEntity>(name: string, item: T): T => {
   item.created_on = new Date();
   item.updated_on = new Date();
@@ -50,11 +68,23 @@ export const insert = <T extends BaseEntity>(name: string, item: T): T => {
   return item;
 };
 
-export const remove = <T extends BaseEntity>(name: string, id: string): any => {
+/**
+ * Remove an item by id from a specific collection
+ * @param name collection name
+ * @param id id of the item
+ */
+export const remove = (name: string, id: string) => {
   const _collection = collection(name);
-  return _collection.deleteOne({ _id: new ObjectId(id) });
+  _collection.deleteOne({ _id: new ObjectId(id) });
 };
 
+/**
+ * Update an item in a specific collection
+ * @param name collection name
+ * @param id id of the item
+ * @param item json of the updated fields
+ * @returns
+ */
 export const update = <T extends BaseEntity>(
   name: string,
   id: string,
@@ -66,39 +96,66 @@ export const update = <T extends BaseEntity>(
   _collection.updateOne({ _id: new ObjectId(id) }, { $set: item });
   return item;
 };
-interface PaginationAndSortingQueryParams {
+export interface PaginationAndSortingQueryParams {
   page: number;
   pageSize: string;
   sortBy: [string];
+  filters: unknown;
 }
 
+/**
+ * Check if an item matching any filter exists
+ */
+export const exists = async (name: string, filters): Promise<boolean> => {
+  const _collection = collection(name);
+  Logger.info(filters);
+
+  const keys = Object.keys(filters);
+  const query = [];
+  keys.forEach((key) => {
+    const t = {};
+    t[key] = filters[key];
+    query.push(t);
+  });
+  Logger.info(JSON.stringify(query));
+  const cursor = _collection.find({
+    $or: query,
+  });
+  const count = await cursor.count();
+  return count > 0;
+};
+/**
+ * Get all items of a collection.
+ * @param name collection name
+ * @param query Params for the query in case not all items are needed
+ * @returns array of items.
+ */
 export const find = async <T>(
   name: string,
-  query: PaginationAndSortingQueryParams,
+  { page, pageSize, sortBy, filters = {} }: PaginationAndSortingQueryParams,
 ): Promise<[T]> => {
   const _collection = collection(name);
-  let cursor = _collection.find({});
-  if (!isEmpty(query)) {
-    if (!isEmpty(query.sortBy)) {
-      const sortOptions = {};
-      // if only one sorting field is set, convert from string to array
-      if (typeof query.sortBy === 'string') {
-        query.sortBy = [query.sortBy];
-      }
-      // map each entry in the array to mongo filters syntax
-      query.sortBy.forEach((element) => {
-        sortOptions[element.split('.')[0]] = element.split('.')[1];
-      });
+  Logger.info(filters);
+  let cursor = _collection.find(filters);
+  if (!isEmpty(sortBy)) {
+    const sortOptions = {};
+    // if only one sorting field is set, convert from string to array
+    if (typeof sortBy === 'string') {
+      sortBy = [sortBy];
+    }
+    // map each entry in the array to mongo filters syntax
+    sortBy.forEach((element) => {
+      sortOptions[element.split('.')[0]] = element.split('.')[1];
+    });
 
-      Logger.info(JSON.stringify(sortOptions));
-      cursor = cursor.sort(sortOptions);
-    }
-    if (!isEmpty(query.page)) {
-      const size: number = parseInt(query.pageSize ?? '10');
-      Logger.info(`Skipping ${(query.page - 1) * size}`);
-      Logger.info(`Size ${size}`);
-      cursor = cursor.skip((query.page - 1) * size).limit(size as number);
-    }
+    Logger.info(JSON.stringify(sortOptions));
+    cursor = cursor.sort(sortOptions);
+  }
+  if (!isEmpty(page)) {
+    const size: number = parseInt(pageSize ?? '10');
+    Logger.info(`Skipping ${(page - 1) * size}`);
+    Logger.info(`Size ${size}`);
+    cursor = cursor.skip((page - 1) * size).limit(size as number);
   }
 
   const items = cursor.toArray() as Promise<[T]>;

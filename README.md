@@ -53,16 +53,15 @@ After installing node, this project will need yarn too, so just run the followin
     $ cd employee-backend
     $ yarn install
 
-<!-- ## Configure app
-
-- To run the project locally;
-- Another setting;
-- One more setting; -->
-
 ## Running the project
 
     $ yarn start
 
-## Simple build for production
+## Running the project in development
 
-    $ yarn build
+For development and live reload on file change use the following command.
+$ yarn dev
+
+## Deployment
+
+The backend is deployed on [Heroku](https://heroku.com/) and the database is hosted on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)

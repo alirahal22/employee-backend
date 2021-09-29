@@ -1,14 +1,25 @@
 import { EMPLOYEE_COLLECTION } from '&/lib/config/collections';
-import { insert } from '&config/db';
+import { insert, exists } from '&config/db';
 import Employee from '../Employee';
 import { get as getDepartment } from '../../department/service/get';
 import { get as getBranch } from '../../branch/service/get';
-import { internalServerError, makeError } from '&utils/makeError';
+import { conflict, internalServerError, makeError } from '&utils/makeError';
 import { Logger } from '&utils/logger';
 
 export const add = async (employee: Employee) => {
+  const { email, phone, branchId, departmentId } = employee;
+
+  /**
+   * check if the employee's email or phone are already in use
+   */
+  const employeeExists = await exists(EMPLOYEE_COLLECTION, { email, phone });
+  if (employeeExists) throw conflict();
+
+  /**
+   * check if the department is valid
+   */
   try {
-    await getDepartment(employee.departmentId);
+    await getDepartment(departmentId);
   } catch (error) {
     Logger.error(JSON.stringify(error));
     if (error.status == 404) {
@@ -17,8 +28,11 @@ export const add = async (employee: Employee) => {
     throw internalServerError();
   }
 
+  /**
+   * check if the branch is valid
+   */
   try {
-    await getBranch(employee.branchId);
+    await getBranch(branchId);
   } catch (error) {
     Logger.error(JSON.stringify(error));
     if (error.status == 404) {
