@@ -124,6 +124,28 @@ export const exists = async (name: string, filters): Promise<boolean> => {
   const count = await cursor.count();
   return count > 0;
 };
+
+/**
+ * Gets all items that match any filter
+ */
+export const findOr = async <T>(name: string, filters): Promise<[T]> => {
+  const _collection = collection(name);
+  Logger.info(filters);
+
+  const keys = Object.keys(filters);
+  const query = [];
+  keys.forEach((key) => {
+    const t = {};
+    t[key] = filters[key];
+    query.push(t);
+  });
+  Logger.info(JSON.stringify(query));
+  const cursor = _collection.find({
+    $or: query,
+  });
+  const items = cursor.toArray() as Promise<[T]>;
+  return items;
+};
 /**
  * Get all items of a collection.
  * @param name collection name
@@ -135,7 +157,6 @@ export const find = async <T>(
   { page, pageSize, sortBy, filters = {} }: PaginationAndSortingQueryParams,
 ): Promise<[T]> => {
   const _collection = collection(name);
-  Logger.info(filters);
   let cursor = _collection.find(filters);
   if (!isEmpty(sortBy)) {
     const sortOptions = {};

@@ -1,17 +1,37 @@
 import { EMPLOYEE_COLLECTION } from '&config/collections';
-import { update as dbUpdate } from '&config/db';
-import { internalServerError, makeError } from '&utils/makeError';
+import { findOr, update as dbUpdate } from '&config/db';
+import { conflict, internalServerError, makeError } from '&utils/makeError';
 import { Logger } from '&utils/logger';
 
 import Employee from '../Employee';
 import { get as getDepartment } from '../../department/service/get';
 import { get as getBranch } from '../../branch/service/get';
 import { isEmpty } from 'lodash';
+import { ObjectId } from 'mongodb';
 
 export const update = async (id: string, employee: Employee) => {
-  if (!isEmpty(employee.departmentId)) {
+  const { email, phone, branchId, departmentId } = employee;
+  /**
+   * check if the employee's email or phone are already in use
+   * for a different employee.
+   */
+  const employees: [Employee] = await findOr(EMPLOYEE_COLLECTION, {
+    email,
+    phone,
+  });
+  if (
+    employees.length > 1 ||
+    (employees.length == 1 && employees[0]._id.toString() !== id)
+  ) {
+    throw conflict();
+  }
+
+  /**
+   * check if the department is valid
+   */
+  if (!isEmpty(departmentId)) {
     try {
-      await getDepartment(employee.departmentId);
+      await getDepartment(departmentId);
     } catch (error) {
       Logger.error(JSON.stringify(error));
       if (error.status == 404) {
@@ -21,9 +41,12 @@ export const update = async (id: string, employee: Employee) => {
     }
   }
 
-  if (!isEmpty(employee.branchId)) {
+  /**
+   * check if the branch is valid
+   */
+  if (!isEmpty(branchId)) {
     try {
-      await getBranch(employee.branchId);
+      await getBranch(branchId);
     } catch (error) {
       Logger.error(JSON.stringify(error));
       if (error.status == 404) {
