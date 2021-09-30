@@ -7,6 +7,20 @@ This will serve as the backend to the employee directory code challenge. It is d
 ## Requirements
 
 For development, you will only need Node.js and a node global package, Yarn, installed in your environement.
+Also you need to set up a `.env` file in the root directory of the project that fits the below
+
+```
+LOGGING_LEVEL='info'
+PORT=5000
+MONGODB_HOST='localhost:27017'
+MONGODB_DATABASE='somename'
+MONGODB_USER='root'
+MONGODB_PWD='root'
+
+# Additional Mongo configuration if needed
+# MONGODB_CONFIG='?ssl=true&replicaSet=atlas-9f1w5z-shard-0&authSource=admin&retryWrites=true&w=majority'
+
+```
 
 ### Node
 
