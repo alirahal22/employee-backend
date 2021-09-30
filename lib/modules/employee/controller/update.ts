@@ -3,7 +3,6 @@ import { Request, Response } from 'express';
 import Employee from '../Employee';
 import { update as updateEmployee } from '../service/update';
 import { get } from '../service/get';
-import { Logger } from '&/lib/utils/logger';
 
 const update = async (req: Request, res: Response) => {
   try {

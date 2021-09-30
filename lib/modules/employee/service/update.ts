@@ -7,7 +7,6 @@ import Employee from '../Employee';
 import { get as getDepartment } from '../../department/service/get';
 import { get as getBranch } from '../../branch/service/get';
 import { isEmpty } from 'lodash';
-import { ObjectId } from 'mongodb';
 
 export const update = async (id: string, employee: Employee) => {
   const { email, phone, branchId, departmentId } = employee;
